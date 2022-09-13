@@ -19,11 +19,11 @@
 
 #include <sourcemod>
 
-bool GFLBans_ValidClient(int client) {
+public bool GFLBans_ValidClient(int client) {
     return client >= 1 && client <= MaxClients && IsClientConnected(client);
 }
 
-void GFLBans_FormatDuration(int client, int duration, char[] buffer, int max_size) {
+public void GFLBans_FormatDuration(int client, int duration, char[] buffer, int max_size) {
     if (duration == 0) {
         Format(buffer, max_size, "%T", "Permanently", client);
     } else if (duration < 90) {
@@ -40,7 +40,7 @@ void GFLBans_FormatDuration(int client, int duration, char[] buffer, int max_siz
     }
 }
 
-int GFLBans_GetClientBySteamID(const char[] steamid) {
+public int GFLBans_GetClientBySteamID(const char[] steamid) {
     char buffer[32];
     for (int c = 1; c < MaxClients; c++) {
         if (!GFLBans_ValidClient(c)) {

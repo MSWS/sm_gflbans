@@ -42,7 +42,7 @@ public void OnAdminMenuReady(Handle admin_menu) {
     }
 }
 
-Action GFLBansAM_OnClientSayCommand(int client, const char[] args) {
+public Action GFLBansAM_OnClientSayCommand(int client, const char[] args) {
     if (StrEqual(args, "!gbabort", false) || StrEqual(args, "/gbabort", false)) {
         return Plugin_Stop;
     }
@@ -88,7 +88,7 @@ Action GFLBansAM_OnClientSayCommand(int client, const char[] args) {
     return Plugin_Continue;
 }
 
-void GFLBansAM_Abort(int client) {
+public void GFLBansAM_Abort(int client) {
     playerinfo[client].isWaitingForChatReason = false;
     playerinfo[client].infractionTarget       = 0;
     playerinfo[client].infractionBlocks[0]    = Block_None;

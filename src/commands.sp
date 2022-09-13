@@ -24,7 +24,7 @@
 #include "includes/chat"
 #include "includes/admin_menu"
 
-void GFLBans_RegisterCommands() {
+public void GFLBans_RegisterCommands() {
     AddCommandListener(CommandListener_Gag, "sm_gag");
     AddCommandListener(CommandListener_Mute, "sm_mute");
     AddCommandListener(CommandListener_Silence, "sm_silence");

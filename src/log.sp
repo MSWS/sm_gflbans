@@ -16,7 +16,7 @@ Cookie log_level_cookie;
 
 ClientLogState client_logs[MAXPLAYERS + 1];
 
-void GFLBans_InitLogging() {
+public void GFLBans_InitLogging() {
     cvar_log_level = CreateConVar("gflbans_log_level", "info", "GFLBans logging level");
     cvar_log_level.AddChangeHook(Cvar_LogLevelChanged);
     RegAdminCmd("sm_gflbans_showlogs", CommandShowLogs, ADMFLAG_RCON);
@@ -42,17 +42,17 @@ public Action CommandShowLogs(int client, int args) {
     return Plugin_Handled;
 }
 
-void GFLBansLogs_OnConfigsLoaded() {
+public void GFLBansLogs_OnConfigsLoaded() {
     char val[12];
     cvar_log_level.GetString(val, sizeof(val));
     Cvar_LogLevelChanged(cvar_log_level, "", val);
 }
 
-void GFLBansLogs_OnClientDisconnected(int client) {
+public void GFLBansLogs_OnClientDisconnected(int client) {
     client_logs[client].log_level = LogLevel_None;
 }
 
-void GFLBansLogs_OnClientCookiesCached(int client) {
+public void GFLBansLogs_OnClientCookiesCached(int client) {
     if (CheckCommandAccess(client, "", ADMFLAG_RCON, true)) {
         char buffer[12];
         GetClientCookie(client, log_level_cookie, buffer, sizeof(buffer));
@@ -104,7 +104,7 @@ void LogMsgToClients(const char[] msg, LogLevel level) {
     }
 }
 
-void GFLBans_LogDebug(const char[] msg, any...) {
+public void GFLBans_LogDebug(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Debug) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);
@@ -114,7 +114,7 @@ void GFLBans_LogDebug(const char[] msg, any...) {
     }
 }
 
-void GFLBans_LogInfo(const char[] msg, any...) {
+public void GFLBans_LogInfo(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Info) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);
@@ -124,7 +124,7 @@ void GFLBans_LogInfo(const char[] msg, any...) {
     }
 }
 
-void GFLBans_LogWarn(const char[] msg, any...) {
+public void GFLBans_LogWarn(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Warn) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);
@@ -134,7 +134,7 @@ void GFLBans_LogWarn(const char[] msg, any...) {
     }
 }
 
-void GFLBans_LogError(const char[] msg, any...) {
+public void GFLBans_LogError(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Error) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);

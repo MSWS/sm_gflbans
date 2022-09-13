@@ -27,7 +27,7 @@
 
 int last_call_admin_time = 0;
 
-void GFLBansAPI_StartHeartbeatTimer() {
+public void GFLBansAPI_StartHeartbeatTimer() {
     CreateTimer(30.0, Timer_Heartbeat, _, TIMER_REPEAT);
 }
 
@@ -93,7 +93,7 @@ JSONArray GetPlayerList() {
     return players;
 }
 
-void GFLBansAPI_SaveInfraction(int client, int target, const InfractionBlock[] blocks, int total_blocks, int duration, const char[] reason) {
+public void GFLBansAPI_SaveInfraction(int client, int target, const InfractionBlock[] blocks, int total_blocks, int duration, const char[] reason) {
     HTTPRequest req       = Start_HTTPRequest("/api/v1/infractions/");
     JSONObject body       = new JSONObject();
     JSONObject player     = GetPlayerObj(target);
@@ -133,7 +133,7 @@ void GFLBansAPI_SaveInfraction(int client, int target, const InfractionBlock[] b
     delete punishments;
 }
 
-void GFLBansAPI_RemoveInfraction(int client, int target, const InfractionBlock[] blocks, int total_blocks, const char[] remove_reason) {
+public void GFLBansAPI_RemoveInfraction(int client, int target, const InfractionBlock[] blocks, int total_blocks, const char[] remove_reason) {
     HTTPRequest req       = Start_HTTPRequest("/api/v1/infractions/remove");
     JSONObject body       = new JSONObject();
     JSONObject player     = GetPlayerObj(target);
@@ -164,7 +164,7 @@ void GFLBansAPI_RemoveInfraction(int client, int target, const InfractionBlock[]
     delete punishments;
 }
 
-void GFLBansAPI_CheckClient(int client) {
+public void GFLBansAPI_CheckClient(int client) {
     HTTPRequest req = Start_HTTPRequest("/api/v1/infractions/check");
     char player_id[24], player_ip[24];
     GetClientAuthId(client, AuthId_SteamID64, player_id, sizeof(player_id), true);
@@ -180,7 +180,7 @@ void GFLBansAPI_CheckClient(int client) {
     req.Get(HTTPCallback_CheckPlayer, client);
 }
 
-void GFLBansAPI_VPNCheckClient(int client) {
+public void GFLBansAPI_VPNCheckClient(int client) {
     HTTPRequest req = Start_HTTPRequest("/api/v1/gs/vpn");
     char player_id[24], player_ip[24];
     GetClientAuthId(client, AuthId_SteamID64, player_id, sizeof(player_id), true);
@@ -191,7 +191,7 @@ void GFLBansAPI_VPNCheckClient(int client) {
     req.Get(HTTPCallback_VPNCheck, client);
 }
 
-void GFLBansAPI_CallAdmin(int client, const char[] reason) {
+public void GFLBansAPI_CallAdmin(int client, const char[] reason) {
     if (GetTime() - last_call_admin_time < 600) {
         GFLBansChat_Announce(client, "%t", "CallAdmin Rate Limit");
         return;
@@ -212,7 +212,7 @@ void GFLBansAPI_CallAdmin(int client, const char[] reason) {
     delete body;
 }
 
-void GFLBansAPI_ClaimCallAdmin(int client) {
+public void GFLBansAPI_ClaimCallAdmin(int client) {
     HTTPRequest req = Start_HTTPRequest("/api/v1/gs/calladmin/claim");
     JSONObject body = new JSONObject();
     char name[64];
@@ -228,7 +228,7 @@ public Action Timer_Heartbeat(Handle timer) {
     return Plugin_Continue;
 }
 
-void GFLBansAPI_DoHeartbeat() {
+public void GFLBansAPI_DoHeartbeat() {
     HTTPRequest req       = Start_HTTPRequest("/api/v1/gs/heartbeat");
     JSONObject body       = new JSONObject();
     JSONArray player_list = GetPlayerList();

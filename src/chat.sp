@@ -5,7 +5,7 @@
 #include "includes/utils"
 #include "includes/chat"
 
-void GFLBansChat_AnnounceAction(int client, int target, const InfractionBlock[] blocks, int total_blocks, int duration) {
+public void GFLBansChat_AnnounceAction(int client, int target, const InfractionBlock[] blocks, int total_blocks, int duration) {
     char admin[64], targ[64], s_duration[32], translation_str[12];
     GetClientName(client, admin, sizeof(admin));
     GetClientName(target, targ, sizeof(targ));
@@ -33,7 +33,7 @@ void GFLBansChat_AnnounceAction(int client, int target, const InfractionBlock[] 
     }
 }
 
-void GFLBansChat_NotifyAdmin(int client, const char[] format, any...) {
+public void GFLBansChat_NotifyAdmin(int client, const char[] format, any...) {
     char buffer[512];
     SetGlobalTransTarget(client);
     VFormat(buffer, sizeof(buffer), format, 3);
@@ -44,7 +44,7 @@ void GFLBansChat_NotifyAdmin(int client, const char[] format, any...) {
     }
 }
 
-void GFLBansChat_NotifyAdmins(const char[] format, any...) {
+public void GFLBansChat_NotifyAdmins(const char[] format, any...) {
     char buffer[512];
     for (int c = 1; c < MaxClients; c++) {
         if (GFLBans_ValidClient(c) && CheckCommandAccess(c, "", ADMFLAG_KICK, true)) {
@@ -55,7 +55,7 @@ void GFLBansChat_NotifyAdmins(const char[] format, any...) {
     }
 }
 
-void GFLBansChat_Announce(int client, const char[] format, any...) {
+public void GFLBansChat_Announce(int client, const char[] format, any...) {
     char buffer[512];
     SetGlobalTransTarget(client);
     VFormat(buffer, sizeof(buffer), format, 3);
