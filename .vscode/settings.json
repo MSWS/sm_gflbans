@@ -1,4 +1,5 @@
 {
     "licenser.license": "GPLv3",
-    "licenser.projectName": "SM GFLBans"
+    "licenser.projectName": "SM GFLBans",
+    "sourcepawn.MainPath": "c:\\Users\\imodm\\Documents\\Coding\\SourcePawn\\GFL\\sm_gflbans\\src\\gflbans.sp"
 }
