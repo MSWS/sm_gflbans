@@ -16,7 +16,7 @@ void GFLBansChat_AnnounceAction(int client, int target, const InfractionBlock[] 
                 Format(translation_str, sizeof(translation_str), "Warned");
                 GFLBansChat_Announce(c, "%t", translation_str, admin, targ, s_duration);
             }
-            
+
             for (int i = 0; i < total_blocks; i++) {
                 if (blocks[i] == Block_Join) {
                     Format(translation_str, sizeof(translation_str), "Banned");
@@ -33,7 +33,7 @@ void GFLBansChat_AnnounceAction(int client, int target, const InfractionBlock[] 
     }
 }
 
-void GFLBansChat_NotifyAdmin(int client, const char[] format, any ...) {
+void GFLBansChat_NotifyAdmin(int client, const char[] format, any...) {
     char buffer[512];
     SetGlobalTransTarget(client);
     VFormat(buffer, sizeof(buffer), format, 3);
@@ -44,7 +44,7 @@ void GFLBansChat_NotifyAdmin(int client, const char[] format, any ...) {
     }
 }
 
-void GFLBansChat_NotifyAdmins(const char[] format, any ...) {
+void GFLBansChat_NotifyAdmins(const char[] format, any...) {
     char buffer[512];
     for (int c = 1; c < MaxClients; c++) {
         if (GFLBans_ValidClient(c) && CheckCommandAccess(c, "", ADMFLAG_KICK, true)) {
@@ -55,7 +55,7 @@ void GFLBansChat_NotifyAdmins(const char[] format, any ...) {
     }
 }
 
-void GFLBansChat_Announce(int client, const char[] format, any ...) {
+void GFLBansChat_Announce(int client, const char[] format, any...) {
     char buffer[512];
     SetGlobalTransTarget(client);
     VFormat(buffer, sizeof(buffer), format, 3);
@@ -82,15 +82,15 @@ void c_print_to_chat_ex(int[] clients, int num_clients, const char[] msg) {
             PbAddString(usr_msg, "params", "");
             PbAddString(usr_msg, "params", "");
         } else {
-            BfWriteByte(usr_msg, 0); // Message author
-            BfWriteByte(usr_msg, true); // Chat message
+            BfWriteByte(usr_msg, 0);     // Message author
+            BfWriteByte(usr_msg, true);  // Chat message
             BfWriteString(usr_msg, msg); // Message text
         }
         EndMessage();
     }
 }
 
-void c_print_to_chat(int client, const char[] msg, any ...) {
+void c_print_to_chat(int client, const char[] msg, any...) {
     char buffer[1024];
     VFormat(buffer, sizeof(buffer), msg, 3);
 

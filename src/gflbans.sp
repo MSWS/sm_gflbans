@@ -32,21 +32,22 @@
 #include "utils.sp"
 #include "chat.sp"
 
-public Plugin myinfo = {
-    name = "GFLBans",
-    author = "Dreae",
+public Plugin myinfo =
+{
+    name        = "GFLBans",
+    author      = "Dreae",
     description = "SourceMod integration with GFL Bans",
-    version = "0.0.1", 
-    url = "https://gitlab.gflclan.com/Dreae/sm_gflbans"
-}
+    version     = "0.0.1",
+    url         = "https://gitlab.gflclan.com/Dreae/sm_gflbans"
+};
 
 public void OnPluginStart() {
     GFLBans_RegisterCommands();
     GFLBans_InitLogging();
-    g_cvar_gflbans_website = CreateConVar("gflbans_website", "", "Base URL for GFL Bans instance");
+    g_cvar_gflbans_website     = CreateConVar("gflbans_website", "", "Base URL for GFL Bans instance");
     g_cvar_gflbans_global_bans = CreateConVar("gflbans_global_bans", "1", "Should this server accept global bans");
-    g_cvar_gflbans_server_id = CreateConVar("gflbans_server_id", "", "ID for this server in GFL Bans", FCVAR_PROTECTED);
-    g_cvar_gflbans_server_key = CreateConVar("gflbans_server_key", "", "Key for this server in GFL Bans", FCVAR_PROTECTED);
+    g_cvar_gflbans_server_id   = CreateConVar("gflbans_server_id", "", "ID for this server in GFL Bans", FCVAR_PROTECTED);
+    g_cvar_gflbans_server_key  = CreateConVar("gflbans_server_key", "", "Key for this server in GFL Bans", FCVAR_PROTECTED);
 
     g_cvar_gflbans_vpn_mode = CreateConVar("gflbans_vpn_mode", "kick", "kick|notify - Action to take when a VPN is detected");
     g_cvar_gflbans_vpn_mode.AddChangeHook(Cvar_VPNModeChanged);
@@ -64,7 +65,7 @@ public void OnPluginStart() {
     LoadTranslations("common.phrases");
     LoadTranslations("gflbans.phrases");
     AutoExecConfig(true, "gflbans");
-    
+
     TopMenu topmenu;
     if (LibraryExists("adminmenu") && ((topmenu = GetAdminTopMenu()) != null)) {
         OnAdminMenuReady(topmenu);
@@ -87,13 +88,13 @@ public void OnMapStart() {
 public void OnConfigsExecuted() {
     ConVar cvar_hostname = FindConVar("hostname");
     ConVar cvar_password = FindConVar("sv_password");
-    
+
     cvar_hostname.GetString(g_s_server_hostname, sizeof(g_s_server_hostname));
 
     char buffer[32];
     cvar_password.GetString(buffer, sizeof(buffer));
     Cvar_PasswordChanged(cvar_password, "", buffer);
-    
+
     g_cvar_gflbans_vpn_mode.GetString(buffer, sizeof(buffer));
     Cvar_VPNModeChanged(g_cvar_gflbans_vpn_mode, "", buffer);
 
@@ -159,9 +160,9 @@ public void Cvar_VPNModeChanged(ConVar cvar, const char[] old_value, const char[
 void CheckServerMod() {
     if (GetEngineVersion() == Engine_CSGO) {
         Format(g_s_server_mod, sizeof(g_s_server_mod), "csgo");
-    } else if (GetEngineVersion() == Engine_CSS) { 
+    } else if (GetEngineVersion() == Engine_CSS) {
         Format(g_s_server_mod, sizeof(g_s_server_mod), "css"); // The best game
-    } else if (GetEngineVersion() == Engine_TF2) { 
+    } else if (GetEngineVersion() == Engine_TF2) {
         Format(g_s_server_mod, sizeof(g_s_server_mod), "tf");
     } else {
         SetFailState("Incompatible mod");

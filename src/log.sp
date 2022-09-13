@@ -14,7 +14,7 @@ LogLevel current_log_level = LogLevel_None;
 ConVar cvar_log_level;
 Cookie log_level_cookie;
 
-ClientLogState client_logs[MAXPLAYERS+1];
+ClientLogState client_logs[MAXPLAYERS + 1];
 
 void GFLBans_InitLogging() {
     cvar_log_level = CreateConVar("gflbans_log_level", "info", "GFLBans logging level");
@@ -73,7 +73,7 @@ public void Cvar_LogLevelChanged(ConVar cvar, const char[] old_value, const char
     GFLBans_LogDebug("Set log level %s", new_value);
 }
 
-bool LogLevelFromString(const char[] string, LogLevel def, LogLevel &out) {
+bool LogLevelFromString(const char[] string, LogLevel def, LogLevel & out) {
     if (StrEqual(string, "debug", false)) {
         out = LogLevel_Debug;
         return true;
@@ -104,7 +104,7 @@ void LogMsgToClients(const char[] msg, LogLevel level) {
     }
 }
 
-void GFLBans_LogDebug(const char[] msg, any ...) {
+void GFLBans_LogDebug(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Debug) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);
@@ -114,7 +114,7 @@ void GFLBans_LogDebug(const char[] msg, any ...) {
     }
 }
 
-void GFLBans_LogInfo(const char[] msg, any ...) {
+void GFLBans_LogInfo(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Info) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);
@@ -124,7 +124,7 @@ void GFLBans_LogInfo(const char[] msg, any ...) {
     }
 }
 
-void GFLBans_LogWarn(const char[] msg, any ...) {
+void GFLBans_LogWarn(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Warn) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);
@@ -134,7 +134,7 @@ void GFLBans_LogWarn(const char[] msg, any ...) {
     }
 }
 
-void GFLBans_LogError(const char[] msg, any ...) {
+void GFLBans_LogError(const char[] msg, any...) {
     if (current_log_level >= LogLevel_Error) {
         char buffer[512];
         VFormat(buffer, sizeof(buffer), msg, 2);

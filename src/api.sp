@@ -46,7 +46,7 @@ HTTPRequest Start_HTTPRequest(const char[] api_path) {
 
     char api_url[256];
     Format(api_url, sizeof(api_url), "%s%s", base_addr, api_path);
-    
+
     HTTPRequest req = new HTTPRequest(api_url);
     req.SetHeader("Authorization", "SERVER %s %s", server_id, server_key);
 
@@ -94,15 +94,15 @@ JSONArray GetPlayerList() {
 }
 
 void GFLBansAPI_SaveInfraction(int client, int target, const InfractionBlock[] blocks, int total_blocks, int duration, const char[] reason) {
-    HTTPRequest req = Start_HTTPRequest("/api/v1/infractions/");
-    JSONObject body = new JSONObject();
-    JSONObject player = GetPlayerObj(target);
+    HTTPRequest req       = Start_HTTPRequest("/api/v1/infractions/");
+    JSONObject body       = new JSONObject();
+    JSONObject player     = GetPlayerObj(target);
     JSONArray punishments = InfractionsToAPIPunishments(blocks, total_blocks);
-    
+
     body.Set("player", player);
     if (GFLBans_ValidClient(client)) {
         JSONObject admin_player = GetPlayerObj(client, false);
-        JSONObject admin = new JSONObject();
+        JSONObject admin        = new JSONObject();
         admin.Set("gs_admin", admin_player);
         body.Set("admin", admin);
         delete admin;
@@ -119,7 +119,7 @@ void GFLBansAPI_SaveInfraction(int client, int target, const InfractionBlock[] b
     if (duration > 0) {
         body.SetInt("duration", duration * 60);
     }
-    
+
     if (g_cvar_gflbans_global_bans.BoolValue) {
         body.SetString("scope", "global");
     } else {
@@ -127,22 +127,22 @@ void GFLBansAPI_SaveInfraction(int client, int target, const InfractionBlock[] b
     }
 
     req.Post(body, HTTPCallback_SaveInfraction, client);
-    
+
     delete body;
     delete player;
     delete punishments;
 }
 
 void GFLBansAPI_RemoveInfraction(int client, int target, const InfractionBlock[] blocks, int total_blocks, const char[] remove_reason) {
-    HTTPRequest req = Start_HTTPRequest("/api/v1/infractions/remove");
-    JSONObject body = new JSONObject();
-    JSONObject player = GetPlayerObj(target);
+    HTTPRequest req       = Start_HTTPRequest("/api/v1/infractions/remove");
+    JSONObject body       = new JSONObject();
+    JSONObject player     = GetPlayerObj(target);
     JSONArray punishments = InfractionsToAPIPunishments(blocks, total_blocks);
-    
+
     body.Set("player", player);
     if (GFLBans_ValidClient(client)) {
         JSONObject admin_player = GetPlayerObj(client, false);
-        JSONObject admin = new JSONObject();
+        JSONObject admin        = new JSONObject();
         admin.Set("gs_admin", admin_player);
         body.Set("admin", admin);
         delete admin;
@@ -158,7 +158,7 @@ void GFLBansAPI_RemoveInfraction(int client, int target, const InfractionBlock[]
     body.SetBool("include_other_servers", g_cvar_gflbans_global_bans.BoolValue);
 
     req.Post(body, HTTPCallback_RemoveInfraction, client);
-    
+
     delete body;
     delete player;
     delete punishments;
@@ -180,7 +180,6 @@ void GFLBansAPI_CheckClient(int client) {
     req.Get(HTTPCallback_CheckPlayer, client);
 }
 
-
 void GFLBansAPI_VPNCheckClient(int client) {
     HTTPRequest req = Start_HTTPRequest("/api/v1/gs/vpn");
     char player_id[24], player_ip[24];
@@ -198,8 +197,8 @@ void GFLBansAPI_CallAdmin(int client, const char[] reason) {
         return;
     }
 
-    HTTPRequest req = Start_HTTPRequest("/api/v1/gs/calladmin");
-    JSONObject body = new JSONObject();
+    HTTPRequest req       = Start_HTTPRequest("/api/v1/gs/calladmin");
+    JSONObject body       = new JSONObject();
     JSONObject player_obj = GetPlayerObj(client, false);
     char name[64];
     GetClientName(client, name, sizeof(name));
@@ -230,8 +229,8 @@ public Action Timer_Heartbeat(Handle timer) {
 }
 
 void GFLBansAPI_DoHeartbeat() {
-    HTTPRequest req = Start_HTTPRequest("/api/v1/gs/heartbeat");
-    JSONObject body = new JSONObject();
+    HTTPRequest req       = Start_HTTPRequest("/api/v1/gs/heartbeat");
+    JSONObject body       = new JSONObject();
     JSONArray player_list = GetPlayerList();
     body.SetString("hostname", g_s_server_hostname);
     body.SetInt("max_slots", GetMaxHumanPlayers());
@@ -295,10 +294,10 @@ public void HTTPCallback_VPNCheck(HTTPResponse response, any data, const char[] 
     int client = view_as<int>(data);
     int status = view_as<int>(response.Status);
     if (status == 200 && GFLBans_ValidClient(client)) {
-        JSONObject resp = view_as<JSONObject>(response.Data);
-        bool is_vpn = resp.GetBool("is_vpn");
+        JSONObject resp      = view_as<JSONObject>(response.Data);
+        bool is_vpn          = resp.GetBool("is_vpn");
         bool is_cloud_gaming = resp.GetBool("is_cloud_gaming");
-        bool is_immune = resp.GetBool("is_immune");
+        bool is_immune       = resp.GetBool("is_immune");
         GFLBans_LogDebug("%N VPN check: is_vpn %d is_cloud_gaming %d is_immune %d", client, is_vpn, is_cloud_gaming, is_immune);
         if ((is_vpn || (is_cloud_gaming && !g_cvar_gflbans_allow_cloud_gaming.BoolValue)) && !is_immune) {
             if (g_vpn_action == VPNAction_Kick) {
@@ -312,7 +311,6 @@ public void HTTPCallback_VPNCheck(HTTPResponse response, any data, const char[] 
     } else if (status != 200) {
         LogResponseError("VPN checking player", response, error);
     }
-
 }
 
 public void HTTPCallback_Heartbeat(HTTPResponse response, any _data, const char[] error) {
@@ -322,7 +320,7 @@ public void HTTPCallback_Heartbeat(HTTPResponse response, any _data, const char[
         JSONArray data = view_as<JSONArray>(response.Data);
         for (int c = 0; c < data.Length; c++) {
             JSONObject heartbeat_obj = view_as<JSONObject>(data.Get(c));
-            JSONObject player = view_as<JSONObject>(heartbeat_obj.Get("player"));
+            JSONObject player        = view_as<JSONObject>(heartbeat_obj.Get("player"));
             char service[12];
             player.GetString("gs_service", service, sizeof(service));
             if (StrEqual(service, "steam", false)) {
@@ -331,7 +329,7 @@ public void HTTPCallback_Heartbeat(HTTPResponse response, any _data, const char[
                 int client = GFLBans_GetClientBySteamID(steamid);
                 if (client) {
                     JSONObject check = view_as<JSONObject>(heartbeat_obj.Get("check"));
-                    
+
                     bool has_punishments = HandleCheckObj(client, check);
                     if (!has_punishments) {
                         GFLBans_ClearPunishments(client);
@@ -380,24 +378,23 @@ public void HTTPCallback_RemoveInfraction(HTTPResponse response, any data, const
 }
 
 void LogResponseError(const char[] action, HTTPResponse response, const char[] error) {
-        JSONObject data = view_as<JSONObject>(response.Data);
-        char detail[128];
-        detail[0] = '\0';
-        if (data.HasKey("detail")) {
-            data.GetString("detail", detail, sizeof(detail));
-        }
-        GFLBans_LogError(
-            "API Error %s;\n -> unexpected status code %d\n -> client error: %s\n -> detail: %s", 
-            action, 
-            response.Status, 
-            error, 
-            detail
-        );
+    JSONObject data = view_as<JSONObject>(response.Data);
+    char detail[128];
+    detail[0] = '\0';
+    if (data.HasKey("detail")) {
+        data.GetString("detail", detail, sizeof(detail));
+    }
+    GFLBans_LogError(
+      "API Error %s;\n -> unexpected status code %d\n -> client error: %s\n -> detail: %s",
+      action,
+      response.Status,
+      error,
+      detail);
 }
 
 bool HandleCheckObj(int client, JSONObject check) {
     JSONObjectKeys keys = check.Keys();
-                    
+
     char key_buff[32];
     int total_blocks = 0;
     InfractionBlock block;

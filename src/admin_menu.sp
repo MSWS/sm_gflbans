@@ -8,7 +8,6 @@
 #include "includes/admin_menu"
 #include "includes/utils"
 
-
 // Most of this file is taken from how basebans handles the admin menu,
 // pretty much verbatim.
 // https://cs.alliedmods.net/sourcemod/source/plugins/basebans/ban.sp
@@ -50,7 +49,7 @@ Action GFLBansAM_OnClientSayCommand(int client, const char[] args) {
 
     if (playerinfo[client].isWaitingForChatReason) {
         playerinfo[client].isWaitingForChatReason = false;
-        
+
         int original_target = GetClientOfUserId(playerinfo[client].infractionTargetUserId);
         if (original_target != playerinfo[client].infractionTarget) {
             GFLBansChat_NotifyAdmin(client, "%t", "Player no longer available");
@@ -66,26 +65,23 @@ Action GFLBansAM_OnClientSayCommand(int client, const char[] args) {
         }
 
         GFLBansChat_AnnounceAction(
-            client,
-            playerinfo[client].infractionTarget,
-            playerinfo[client].infractionBlocks,
-            total_blocks,
-            playerinfo[client].infractionTime
-        );
+          client,
+          playerinfo[client].infractionTarget,
+          playerinfo[client].infractionBlocks,
+          total_blocks,
+          playerinfo[client].infractionTime);
         GFLBansAPI_SaveInfraction(
-            client,
-            playerinfo[client].infractionTarget,
-            playerinfo[client].infractionBlocks,
-            total_blocks,
-            playerinfo[client].infractionTime,
-            args
-        );
+          client,
+          playerinfo[client].infractionTarget,
+          playerinfo[client].infractionBlocks,
+          total_blocks,
+          playerinfo[client].infractionTime,
+          args);
         GFLBans_ApplyPunishments(
-            playerinfo[client].infractionTarget,
-            playerinfo[client].infractionBlocks,
-            total_blocks,
-            playerinfo[client].infractionTime
-        );
+          playerinfo[client].infractionTarget,
+          playerinfo[client].infractionBlocks,
+          total_blocks,
+          playerinfo[client].infractionTime);
         return Plugin_Stop;
     }
 
@@ -94,8 +90,8 @@ Action GFLBansAM_OnClientSayCommand(int client, const char[] args) {
 
 void GFLBansAM_Abort(int client) {
     playerinfo[client].isWaitingForChatReason = false;
-    playerinfo[client].infractionTarget = 0;
-    playerinfo[client].infractionBlocks[0] = Block_None;
+    playerinfo[client].infractionTarget       = 0;
+    playerinfo[client].infractionBlocks[0]    = Block_None;
     GFLBansChat_NotifyAdmin(client, "%t", "Punishment aborted");
 }
 
@@ -118,7 +114,6 @@ public void AdminMenu_Gag(TopMenu topmenu, TopMenuAction action, TopMenuObject o
         DisplayTargetMenu(param);
     }
 }
-
 
 public void AdminMenu_Mute(TopMenu topmenu, TopMenuAction action, TopMenuObject obj, int param, char[] buffer, int maxlength) {
     if (action == TopMenuAction_DisplayOption) {
@@ -204,8 +199,7 @@ void DisplayBanTimeMenu(int client) {
     menu.Display(client, MENU_TIME_FOREVER);
 }
 
-public int MenuHandler_PlayerList(Menu menu, MenuAction action, int param1, int param2)
-{
+public int MenuHandler_PlayerList(Menu menu, MenuAction action, int param1, int param2) {
     if (action == MenuAction_End) {
         delete menu;
     } else if (action == MenuAction_Cancel) {
@@ -224,7 +218,7 @@ public int MenuHandler_PlayerList(Menu menu, MenuAction action, int param1, int 
         } else if (!CanUserTarget(param1, target)) {
             GFLBansChat_NotifyAdmin(param1, "%t", "Unable to target");
         } else {
-            playerinfo[param1].infractionTarget = target;
+            playerinfo[param1].infractionTarget       = target;
             playerinfo[param1].infractionTargetUserId = userid;
             DisplayBanTimeMenu(param1);
         }
@@ -243,10 +237,10 @@ public int MenuHandler_TimeList(Menu menu, MenuAction action, int param1, int pa
     } else if (action == MenuAction_Select) {
         char info[12];
         menu.GetItem(param2, info, sizeof(info));
-        playerinfo[param1].infractionTime = StringToInt(info);
+        playerinfo[param1].infractionTime         = StringToInt(info);
         playerinfo[param1].isWaitingForChatReason = true;
         GFLBansChat_NotifyAdmin(param1, "%t", "Enter infraction reason");
     }
-    
+
     return 0;
 }

@@ -31,7 +31,7 @@ enum struct PlayerInfractions {
     bool call_admin_banned;
 }
 
-PlayerInfractions player_infractions[MAXPLAYERS+1];
+PlayerInfractions player_infractions[MAXPLAYERS + 1];
 
 bool GFLBans_CallAdminBanned(int client) {
     if (!GFLBans_ValidClient(client)) {
@@ -43,7 +43,7 @@ bool GFLBans_CallAdminBanned(int client) {
 
 void GFLBans_ApplyPunishment(int client, InfractionBlock block, int duration) {
     GFLBans_LogDebug("Applying infraction %d to %N", block, client);
-    
+
     if (duration > 0) {
         SetupExpirationTimer(client, block, duration);
     }
@@ -69,7 +69,7 @@ void GFLBans_ApplyPunishment(int client, InfractionBlock block, int duration) {
     }
 }
 
-void GFLBans_RemovePunishment(int client, InfractionBlock block) {    
+void GFLBans_RemovePunishment(int client, InfractionBlock block) {
     KillExpirationTimer(client, block);
     if (block == Block_Chat) {
         if (BaseComm_IsClientGagged(client)) {
@@ -114,18 +114,18 @@ void GFLBans_ClearOtherPunishments(int client, const InfractionBlock[] blocks, i
     int total_blocks_to_clear;
     int max_blocks = view_as<int>(Block_None);
     for (int c = 0; c < max_blocks; c++) {
-        bool found = false;
+        bool found        = false;
         InfractionBlock b = view_as<InfractionBlock>(c);
         for (int i = 0; i < total_blocks; i++) {
             if (blocks[i] == b) {
                 found = true;
                 continue;
-            } 
+            }
         }
 
         if (!found) {
-                blocks_to_clear[total_blocks_to_clear] = b;
-                total_blocks_to_clear++;
+            blocks_to_clear[total_blocks_to_clear] = b;
+            total_blocks_to_clear++;
         }
     }
 
@@ -165,7 +165,7 @@ bool GFLBans_PunishmentToString(InfractionBlock punishment, char[] buffer, int m
     return true;
 }
 
-bool GFLBans_StringToPunishment(const char[] string, InfractionBlock &punishment) {
+bool GFLBans_StringToPunishment(const char[] string, InfractionBlock & punishment) {
     if (StrEqual(string, "voice_block")) {
         punishment = Block_Voice;
     } else if (StrEqual(string, "chat_block")) {
@@ -217,8 +217,8 @@ void KillExpirationTimer(int client, InfractionBlock block) {
 }
 
 Action Timer_ExpireInfraction(Handle timer, any data) {
-    DataPack dp = view_as<DataPack>(data);
-    int client = dp.ReadCell();
+    DataPack dp                = view_as<DataPack>(data);
+    int client                 = dp.ReadCell();
     InfractionBlock infraction = view_as<InfractionBlock>(dp.ReadCell());
 
     InfractionBlock infractions[1];

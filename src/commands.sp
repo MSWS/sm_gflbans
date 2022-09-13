@@ -42,7 +42,7 @@ void GFLBans_RegisterCommands() {
 }
 
 public Action CommandWarn(int client, int args) {
-    int target_list[MAXPLAYERS+1];
+    int target_list[MAXPLAYERS + 1];
     int target_count = -1;
     char reason[128];
     int time = 0;
@@ -65,7 +65,7 @@ public Action CommandAbort(int client, int args) {
 }
 
 public Action CommandBan(int client, int args) {
-    int target_list[MAXPLAYERS+1];
+    int target_list[MAXPLAYERS + 1];
     int target_count = -1;
     char reason[128];
     int time = 0;
@@ -78,7 +78,7 @@ public Action CommandBan(int client, int args) {
         return Plugin_Handled;
     }
 
-    InfractionBlock blocks[] = {Block_Join};
+    InfractionBlock blocks[] = { Block_Join };
     for (int c = 0; c < target_count; c++) {
         GFLBansChat_AnnounceAction(client, target_list[c], blocks, sizeof(blocks), time);
         GFLBansAPI_SaveInfraction(client, target_list[c], blocks, sizeof(blocks), time, reason);
@@ -118,7 +118,7 @@ public Action CommandClaimCallAdmin(int client, int args) {
 }
 
 public Action CommandBanCallAdmin(int client, int args) {
-    int target_list[MAXPLAYERS+1];
+    int target_list[MAXPLAYERS + 1];
     int target_count = -1;
     char reason[128];
     int time = 0;
@@ -126,7 +126,7 @@ public Action CommandBanCallAdmin(int client, int args) {
         return Plugin_Handled;
     }
 
-    InfractionBlock blocks[] = {Block_CallAdmin};
+    InfractionBlock blocks[] = { Block_CallAdmin };
     for (int c = 0; c < target_count; c++) {
         GFLBansChat_AnnounceAction(client, target_list[c], blocks, sizeof(blocks), time);
         GFLBansAPI_SaveInfraction(client, target_list[c], blocks, sizeof(blocks), time, reason);
@@ -136,13 +136,13 @@ public Action CommandBanCallAdmin(int client, int args) {
     return Plugin_Handled;
 }
 
-bool GetCommandTargets(int client, const char[] target_string, int[] target_list, int max_targets, int &target_count) {
+bool GetCommandTargets(int client, const char[] target_string, int[] target_list, int max_targets, int & target_count) {
     char target_name[MAX_TARGET_LENGTH];
     bool tn_is_ml;
     int result = ProcessTargetString(
-        target_string, client, target_list, max_targets, 
-        COMMAND_FILTER_CONNECTED | COMMAND_FILTER_NO_BOTS,
-        target_name, sizeof(target_name), tn_is_ml);
+      target_string, client, target_list, max_targets,
+      COMMAND_FILTER_CONNECTED | COMMAND_FILTER_NO_BOTS,
+      target_name, sizeof(target_name), tn_is_ml);
 
     if (result < 0) {
         ReplyToTargetError(client, result);
@@ -155,7 +155,7 @@ bool GetCommandTargets(int client, const char[] target_string, int[] target_list
     return true;
 }
 
-bool ParseCommandArguments(const char[] command, int client, int target_list[MAXPLAYERS+1], int &target_count, char[] reason, int reason_max, int &time) {
+bool ParseCommandArguments(const char[] command, int client, int target_list[MAXPLAYERS + 1], int & target_count, char[] reason, int reason_max, int & time) {
     if (GetCmdArgs() < 2) {
         ReplyToCommand(client, "%t", "Infraction Usage", command);
         return false;
@@ -167,17 +167,17 @@ bool ParseCommandArguments(const char[] command, int client, int target_list[MAX
     char target[65];
     int len = BreakString(arguments, target, sizeof(target));
 
-    if (!GetCommandTargets(client, target, target_list, MAXPLAYERS+1, target_count)) {
+    if (!GetCommandTargets(client, target, target_list, MAXPLAYERS + 1, target_count)) {
         return false;
     }
 
     char s_time[12];
     int next_len = BreakString(arguments[len], s_time, sizeof(s_time));
-    time = StringToInt(s_time);
+    time         = StringToInt(s_time);
     if (next_len != -1) {
         len += next_len;
     } else {
-        len = 0;
+        len          = 0;
         arguments[0] = '\0';
     }
     Format(reason, reason_max, arguments[len]);
@@ -190,7 +190,7 @@ Action HandleChatInfraction(const char[] command, int client, int admin_flags, c
         return Plugin_Continue;
     }
 
-    int target_list[MAXPLAYERS+1];
+    int target_list[MAXPLAYERS + 1];
     int target_count = -1;
     char reason[128];
     int time = 0;
@@ -218,14 +218,14 @@ Action HandleRemoveChatInfraction(int client, int admin_flags, const InfractionB
     char target[65], reason[128];
     int len = BreakString(arguments, target, sizeof(target));
     if (len == -1) {
-        len = 0;
+        len          = 0;
         arguments[0] = '\0';
     }
     Format(reason, sizeof(reason), arguments[len]);
 
-    int target_list[MAXPLAYERS+1];
+    int target_list[MAXPLAYERS + 1];
     int target_count = -1;
-    if (!GetCommandTargets(client, target, target_list, MAXPLAYERS+1, target_count)) {
+    if (!GetCommandTargets(client, target, target_list, MAXPLAYERS + 1, target_count)) {
         return Plugin_Stop;
     }
 
@@ -238,31 +238,31 @@ Action HandleRemoveChatInfraction(int client, int admin_flags, const InfractionB
 }
 
 public Action CommandListener_Gag(int client, const char[] command, int args) {
-    InfractionBlock blocks[] = {Block_Chat};
+    InfractionBlock blocks[] = { Block_Chat };
     return HandleChatInfraction(command, client, ADMFLAG_CHAT, blocks, sizeof(blocks));
 }
 
 public Action CommandListener_Mute(int client, const char[] command, int args) {
-    InfractionBlock blocks[] = {Block_Voice};
+    InfractionBlock blocks[] = { Block_Voice };
     return HandleChatInfraction(command, client, ADMFLAG_CHAT, blocks, sizeof(blocks));
 }
 
 public Action CommandListener_Silence(int client, const char[] command, int args) {
-    InfractionBlock blocks[] = {Block_Chat, Block_Voice};
+    InfractionBlock blocks[] = { Block_Chat, Block_Voice };
     return HandleChatInfraction(command, client, ADMFLAG_CHAT, blocks, sizeof(blocks));
 }
 
 public Action CommandListener_Ungag(int client, const char[] command, int args) {
-    InfractionBlock blocks[] = {Block_Chat};
+    InfractionBlock blocks[] = { Block_Chat };
     return HandleRemoveChatInfraction(client, ADMFLAG_CHAT, blocks, sizeof(blocks));
 }
 
 public Action CommandListener_Unmute(int client, const char[] command, int args) {
-    InfractionBlock blocks[] = {Block_Voice};
+    InfractionBlock blocks[] = { Block_Voice };
     return HandleRemoveChatInfraction(client, ADMFLAG_CHAT, blocks, sizeof(blocks));
 }
 
 public Action CommandListener_Unsilence(int client, const char[] command, int args) {
-    InfractionBlock blocks[] = {Block_Chat, Block_Voice};
+    InfractionBlock blocks[] = { Block_Chat, Block_Voice };
     return HandleRemoveChatInfraction(client, ADMFLAG_CHAT, blocks, sizeof(blocks));
 }
